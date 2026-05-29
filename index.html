@@ -1,111 +1,85 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Season3 AR Plus</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+<title>Season3 AR Plus</title>
 
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      font-family: Arial, sans-serif;
-      background: #000;
-    }
+<script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
-    .guide {
-      position: fixed;
-      top: 16px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 9999;
-      background: rgba(0,0,0,0.72);
-      color: #fff;
-      padding: 10px 18px;
-      border-radius: 22px;
-      font-size: 15px;
-      text-align: center;
-      line-height: 1.45;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.35);
-    }
+<style>
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  font-family: Arial, sans-serif;
+}
 
-    .bottomBtn {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 9999;
-      display: none;
-      padding: 13px 22px;
-      border-radius: 28px;
-      background: #ffd400;
-      color: #111;
-      font-weight: bold;
-      text-decoration: none;
-      font-size: 16px;
-      box-shadow: 0 4px 18px rgba(0,0,0,0.45);
-    }
-  </style>
+#guide {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  background: rgba(0,0,0,0.72);
+  color: white;
+  padding: 12px 22px;
+  border-radius: 24px;
+  font-size: 18px;
+  text-align: center;
+  line-height: 1.45;
+}
+</style>
 </head>
 
 <body>
-  <div class="guide" id="guide">
-    자유의 여신상 이미지를<br>
-    카메라에 비춰 주세요
-  </div>
 
-  <a href="https://youtube.com/shorts/C7Yl5-dFYKw"
-     target="_blank"
-     class="bottomBtn"
-     id="videoBtn">
-    자유여행 영상 보기
-  </a>
+<div id="guide">
+  자유의 여신상 이미지를<br>
+  카메라에 비춰 주세요
+</div>
 
-  <a-scene
-    mindar-image="imageTargetSrc: ./targets.mind; autoStart: true;"
-    color-space="sRGB"
-    renderer="colorManagement: true, physicallyCorrectLights"
-    vr-mode-ui="enabled: false"
-    device-orientation-permission-ui="enabled: false"
-    embedded>
+<a-scene
+  mindar-image="imageTargetSrc: ./targets.mind; autoStart: true;"
+  embedded
+  color-space="sRGB"
+  renderer="colorManagement: true"
+  vr-mode-ui="enabled: false"
+  device-orientation-permission-ui="enabled: false">
 
-    <a-assets>
-      <img id="panelImg" src="./panel.png">
-    </a-assets>
+  <a-assets>
+    <img id="panel" src="./panel.png">
+  </a-assets>
 
-    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+  <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-    <a-entity id="target" mindar-image-target="targetIndex: 0">
+  <a-entity id="target" mindar-image-target="targetIndex: 0">
+    <a-image
+      src="#panel"
+      position="0 0 0"
+      width="1.4"
+      height="0.79">
+    </a-image>
+  </a-entity>
 
-      <a-image
-        src="#panelImg"
-        position="0 0 0"
-        width="1.45"
-        height="0.82"
-        rotation="0 0 0"
-        animation="property: scale; from: 0.6 0.6 0.6; to: 1 1 1; dur: 800; easing: easeOutElastic">
-      </a-image>
+</a-scene>
 
-    </a-entity>
-  </a-scene>
+<script>
+const target = document.querySelector("#target");
+const guide = document.querySelector("#guide");
 
-  <script>
-    const target = document.querySelector("#target");
-    const guide = document.querySelector("#guide");
-    const videoBtn = document.querySelector("#videoBtn");
+target.addEventListener("targetFound", () => {
+  guide.innerHTML = "AR 안내판이 표시되었습니다";
+});
 
-    target.addEventListener("targetFound", () => {
-      guide.innerHTML = "자유의 여신상 AR 안내판이<br>표시되었습니다";
-      videoBtn.style.display = "block";
-    });
+target.addEventListener("targetLost", () => {
+  guide.innerHTML = "자유의 여신상 이미지를<br>카메라에 비춰 주세요";
+});
+</script>
 
-    target.addEventListener("targetLost", () => {
-      guide.innerHTML = "자유의 여신상 이미지를<br>카메라에 비춰 주세요";
-      videoBtn.style.display = "none";
-    });
-  </script>
 </body>
 </html>
